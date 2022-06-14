@@ -63,12 +63,13 @@ public class InvoiceHeader {
         this.invoiceNum = invoiceNum;
     }
 
-    public LocalDate getInvoiceDate() {
-        return invoiceDate;
+    public String getInvoiceDate() {
+
+        return invoiceDate.format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));
     }
 
     public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = LocalDate.parse(invoiceDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        this.invoiceDate = LocalDate.parse(invoiceDate, DateTimeFormatter.ofPattern("dd-MM-uuuu"));
     }
 
     public String getCustomerName() {
@@ -80,7 +81,7 @@ public class InvoiceHeader {
     }
 
 
-    public ArrayList<InvoiceLine> getInvoiceItems() {
+    public ArrayList<InvoiceLine> getInvoiceLines() {
         return invoiceLines;
     }
 
@@ -89,7 +90,12 @@ public class InvoiceHeader {
     @Override
     public String toString(){
         //return "The invoice NO."+ invoiceNum +" was created on " + invoiceDate.toString()+" for " + customerName + " with " + invoiceLines.size() + " items totaling to " + invoiceTotal +" EGP.";
-        return "invoice"+invoiceNum+"Date("+invoiceDate+"),"+customerName + " Items " + invoiceLines ;
+        //return "invoice"+invoiceNum+"Date("+invoiceDate+"),"+customerName + " Items " + invoiceLines ;
+        return  invoiceNum + "," + invoiceDate + "," +customerName +"\n";
+    }
+    public String toCSV(){
+        String date = invoiceDate.format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));
+        return  invoiceNum + "," + date + "," +customerName +"\n";
     }
 
     public static void main(String[] args) {
@@ -100,8 +106,6 @@ public class InvoiceHeader {
         invoice.addInvoiceItem(new InvoiceLine("Air Pods Pro",3,500,invoice));
 
         //invoice.removeInvoiceItem(3);
-
-
 
         System.out.println(invoice);
         System.out.println(invoice.invoiceLines);

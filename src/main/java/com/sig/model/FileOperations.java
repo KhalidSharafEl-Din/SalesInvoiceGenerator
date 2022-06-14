@@ -9,6 +9,7 @@ public class FileOperations {
         ArrayList<InvoiceHeader> headers = new ArrayList<>();
         String row;
         BufferedReader csvReader = null;
+        // Reading InvoiceHeader.csv
         try{
             csvReader = new BufferedReader(new FileReader("src/main/java/com/sig/model/InvoiceHeader.csv"));
             while ((row = csvReader.readLine()) != null) {
@@ -24,7 +25,7 @@ public class FileOperations {
             // Close the file.
             try {csvReader.close();} catch (IOException e) {e.printStackTrace();}
         }
-
+        // Reading InvoiceLine.csv
         try{
             csvReader = new BufferedReader(new FileReader("src/main/java/com/sig/model/InvoiceLine.csv"));
             while ((row = csvReader.readLine()) != null) {
@@ -46,12 +47,36 @@ public class FileOperations {
         return headers;
     }
 
-    public boolean writeFile(ArrayList<InvoiceHeader> invoiceHeader){
-        return true;
+    public void writeFile(ArrayList<InvoiceHeader> invoiceHeader){
+        try {
+            FileWriter csvWriter = new FileWriter("src/main/java/com/sig/model/outputTest.csv");
+            for(InvoiceHeader header : invoiceHeader){
+                csvWriter.append(header.toCSV());
+            }
+            csvWriter.close();
+
+            csvWriter = new FileWriter("src/main/java/com/sig/model/outputTest2.csv");
+            for(InvoiceHeader header : invoiceHeader){
+               for(InvoiceLine line : header.getInvoiceLines()){
+                   csvWriter.append(line.toCSV());
+               }
+            }
+            csvWriter.close();
+            
+        } catch (IOException e) {e.printStackTrace();}
     }
 
     public static void main(String[] args) {
         FileOperations fileIO = new FileOperations();
-        System.out.println(fileIO.readFile());
+        //fileIO.writeFile(fileIO.readFile());
+
+        for(InvoiceHeader header : fileIO.readFile()) {
+            System.out.print("invoice" + header.getInvoiceNum() + "Num\n{\n");
+            System.out.print("Invoice" + header.getInvoiceNum() + "Date(" + header.getInvoiceDate() + "), " + header.getCustomerName() + "\n");
+            for (InvoiceLine line : header.getInvoiceLines()) {
+                System.out.print(line.toCSV());
+            }
+            System.out.println("}\n\n");
+        }
     }
 }

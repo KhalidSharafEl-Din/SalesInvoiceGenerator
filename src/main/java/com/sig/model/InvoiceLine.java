@@ -63,7 +63,11 @@ public class InvoiceLine {
     @Override
     public String toString(){
         //return "Item number " + itemNumber + " in invoice number " + invoice.getInvoiceNum() + " of " + itemName + " for " + itemPrice +" EGP for total of " +itemTotal+"\n";
-        return "" + itemName + "," + itemCount + "," + itemPrice;
+        return  invoice.getInvoiceNum()+ ","+ itemName + "," + itemPrice + "," + itemCount +"\n";
+    }
+
+    public String toCSV(){
+        return  invoice.getInvoiceNum()+ ","+ itemName + "," + (int)itemPrice + "," + itemCount +"\n";
     }
     
 }
