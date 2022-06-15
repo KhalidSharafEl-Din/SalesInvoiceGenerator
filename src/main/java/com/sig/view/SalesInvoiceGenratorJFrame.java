@@ -2,8 +2,6 @@ package com.sig.view;
 
 import com.sig.controller.ActionHandler;
 
-import javax.swing.*;
-
 public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
 
     /**
@@ -54,6 +52,8 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sales Invoice Generator V1.0");
+        setLocation(new java.awt.Point(0, 0));
 
         invoiceHeaderTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -189,6 +189,9 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {deleteInvoiceButton, deleteItemButton, newInvoiceButton, newItemButton});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -223,7 +226,10 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {deleteInvoiceButton, deleteItemButton, newInvoiceButton, newItemButton});
+
+        setSize(new java.awt.Dimension(938, 634));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
@@ -255,13 +261,9 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+        try {       
+                    javax.swing.UIManager.setLookAndFeel("com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightContrastIJTheme");
+
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -272,7 +274,7 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+       
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -308,6 +310,10 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 
-    private ActionHandler handler = new ActionHandler();
+    private ActionHandler handler = new ActionHandler(this);
+
+    public ActionHandler getHandler(){
+        return handler;
+    }
 
 }
