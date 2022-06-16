@@ -16,7 +16,7 @@ public class InvoiceHeader {
         this.invoiceDate = LocalDate.now();
         this.invoiceLines = new ArrayList<>();
     }
-    InvoiceHeader(int invoiceNo, String customerName, String invoiceDate){
+    public InvoiceHeader(int invoiceNo, String customerName, String invoiceDate){
         this(invoiceNo, customerName);
         setInvoiceDate(invoiceDate);
     }
@@ -39,7 +39,7 @@ public class InvoiceHeader {
         getInvoiceTotal();
     }
     public void removeInvoiceItem(int itemNum) {
-        this.invoiceLines.remove(itemNum-1);
+        this.invoiceLines.remove(itemNum);
         getInvoiceTotal();
     }
 
@@ -90,8 +90,8 @@ public class InvoiceHeader {
     @Override
     public String toString(){
         //return "The invoice NO."+ invoiceNum +" was created on " + invoiceDate.toString()+" for " + customerName + " with " + invoiceLines.size() + " items totaling to " + invoiceTotal +" EGP.";
-        //return "invoice"+invoiceNum+"Date("+invoiceDate+"),"+customerName + " Items " + invoiceLines ;
-        return  invoiceNum + "," + invoiceDate + "," +customerName +"\n";
+        return "invoice"+invoiceNum+"Date("+invoiceDate+"),"+customerName + " Items " + invoiceLines ;
+        //return  invoiceNum + "," + invoiceDate + "," +customerName +"\n";
     }
     public String toCSV(){
         String date = invoiceDate.format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));

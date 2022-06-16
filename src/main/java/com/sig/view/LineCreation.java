@@ -1,21 +1,16 @@
-package com.sig.view;/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
+package com.sig.view;
 
-import java.awt.event.ActionListener;
+import javax.swing.*;
 
-/**
- *
- * @author Khalid
- */
 public class LineCreation extends javax.swing.JDialog {
 
     /**
      * Creates new form lineCreation
      */
-    public LineCreation(java.awt.Frame parent, boolean modal) {
+    private SalesInvoiceGeneratorJFrame parent;
+    public LineCreation(SalesInvoiceGeneratorJFrame parent, boolean modal) {
         super(parent, modal);
+        this.parent = parent;
         initComponents();
     }
 
@@ -29,7 +24,11 @@ public class LineCreation extends javax.swing.JDialog {
     private void initComponents() {
 
         confirmLineCreationButton = new javax.swing.JButton();
+        confirmLineCreationButton.addActionListener(this.parent.getHandler());
+        confirmLineCreationButton.setActionCommand("confirmLineCreationButton");
         cancelLineCreationButton = new javax.swing.JButton();
+        cancelLineCreationButton.addActionListener(this.parent.getHandler());
+        cancelLineCreationButton.setActionCommand("cancelLineCreationButton");
         itemCountTextField = new javax.swing.JTextField();
         ItemPriceTextField = new javax.swing.JTextField();
         itemNameTextField = new javax.swing.JTextField();
@@ -183,7 +182,7 @@ public class LineCreation extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                LineCreation dialog = new LineCreation(new javax.swing.JFrame(), true);
+                LineCreation dialog = new LineCreation(new SalesInvoiceGeneratorJFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -207,4 +206,15 @@ public class LineCreation extends javax.swing.JDialog {
     private javax.swing.JLabel itemPriceLabel;
     // End of variables declaration//GEN-END:variables
 
+    public JTextField getItemPriceTextField() {
+        return ItemPriceTextField;
+    }
+
+    public JTextField getItemCountTextField() {
+        return itemCountTextField;
+    }
+
+    public JTextField getItemNameTextField() {
+        return itemNameTextField;
+    }
 }

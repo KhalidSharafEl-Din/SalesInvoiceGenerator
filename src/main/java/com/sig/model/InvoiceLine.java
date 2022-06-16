@@ -7,6 +7,9 @@ public class InvoiceLine {
     private double itemTotal;
     private InvoiceHeader invoice;
 
+
+
+    private int itemNum;
     public InvoiceLine(){
 
     }
@@ -16,6 +19,7 @@ public class InvoiceLine {
         this.itemCount = itemCount;
         this.itemPrice = itemPrice;
         this.invoice = invoice;
+        this.itemNum = invoice.getInvoiceLines().size()+1;
         calItemTotal();
     }
 
@@ -59,7 +63,9 @@ public class InvoiceLine {
     public void setInvoice(InvoiceHeader invoice) {
         this.invoice = invoice;
     }
-
+    public int getItemNum() {
+        return itemNum;
+    }
     @Override
     public String toString(){
         //return "Item number " + itemNumber + " in invoice number " + invoice.getInvoiceNum() + " of " + itemName + " for " + itemPrice +" EGP for total of " +itemTotal+"\n";
@@ -69,5 +75,8 @@ public class InvoiceLine {
     public String toCSV(){
         return  invoice.getInvoiceNum()+ ","+ itemName + "," + (int)itemPrice + "," + itemCount +"\n";
     }
-    
+
+    public void setItemNum(int itemNum) {
+        this.itemNum = itemNum;
+    }
 }

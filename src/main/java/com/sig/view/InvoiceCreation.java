@@ -6,8 +6,10 @@ public class InvoiceCreation extends javax.swing.JDialog {
     /**
      * Creates new form newJDialog
      */
-    public InvoiceCreation(java.awt.Frame parent, boolean modal) {
+    private SalesInvoiceGeneratorJFrame parent;
+    public InvoiceCreation( SalesInvoiceGeneratorJFrame  parent, boolean modal) {
         super(parent, modal);
+        this.parent = parent;
         initComponents();
     }
 
@@ -25,7 +27,11 @@ public class InvoiceCreation extends javax.swing.JDialog {
         CreationDateLabel = new javax.swing.JLabel();
         dialogBoxTitleLabel = new javax.swing.JLabel();
         confirmInvoiceCreationButton = new javax.swing.JButton();
+        confirmInvoiceCreationButton.addActionListener(this.parent.getHandler());
+        confirmInvoiceCreationButton.setActionCommand("confirmInvoiceCreationButton");
         cancelInvoiceCreationButton = new javax.swing.JButton();
+        cancelInvoiceCreationButton.addActionListener(this.parent.getHandler());
+        cancelInvoiceCreationButton.setActionCommand("cancelInvoiceCreationButton");
         invoiceNumTextField = new javax.swing.JTextField();
         customerNameTextField = new javax.swing.JTextField();
         creationDateTextField = new javax.swing.JTextField();
@@ -167,7 +173,7 @@ public class InvoiceCreation extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InvoiceCreation dialog = new InvoiceCreation(new javax.swing.JFrame(), true);
+                InvoiceCreation dialog = new InvoiceCreation(new SalesInvoiceGeneratorJFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -183,6 +189,9 @@ public class InvoiceCreation extends javax.swing.JDialog {
     private javax.swing.JLabel CreationDateLabel;
     private javax.swing.JButton cancelInvoiceCreationButton;
     private javax.swing.JButton confirmInvoiceCreationButton;
+
+
+
     private javax.swing.JTextField creationDateTextField;
     private javax.swing.JLabel customerNameLabel;
     private javax.swing.JTextField customerNameTextField;
@@ -191,4 +200,15 @@ public class InvoiceCreation extends javax.swing.JDialog {
     private javax.swing.JLabel invoiceNumberLabel;
     // End of variables declaration//GEN-END:variables
 
+    public JTextField getCreationDateTextField() {
+        return creationDateTextField;
+    }
+
+    public JTextField getCustomerNameTextField() {
+        return customerNameTextField;
+    }
+
+    public JTextField getInvoiceNumTextField() {
+        return invoiceNumTextField;
+    }
 }

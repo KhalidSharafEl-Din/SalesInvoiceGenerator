@@ -1,13 +1,18 @@
 package com.sig.view;
 
 import com.sig.controller.ActionHandler;
+import com.sig.model.InvoiceHeader;
+import com.sig.model.invoicesTableData;
 
-public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
+import javax.swing.*;
+import java.util.ArrayList;
+
+public class SalesInvoiceGeneratorJFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form SalesInvoiceGenratorJFrame
      */
-    public SalesInvoiceGenratorJFrame() {
+    public SalesInvoiceGeneratorJFrame() {
         initComponents();
     }
 
@@ -22,6 +27,7 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
 
         invoiceHeaderScrollPane = new javax.swing.JScrollPane();
         invoiceHeaderTable = new javax.swing.JTable();
+        invoiceHeaderTable.getSelectionModel().addListSelectionListener(handler);
         newInvoiceButton = new javax.swing.JButton();
         newInvoiceButton.addActionListener(handler);
         deleteInvoiceButton = new javax.swing.JButton();
@@ -265,20 +271,20 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                     javax.swing.UIManager.setLookAndFeel("com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightContrastIJTheme");
 
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SalesInvoiceGenratorJFrame().setVisible(true);
+                new SalesInvoiceGeneratorJFrame().setVisible(true);
             }
 
         });
@@ -309,11 +315,62 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
-
     private ActionHandler handler = new ActionHandler(this);
+    private ArrayList<InvoiceHeader> headers;
+    private invoicesTableData invoicesTableData;
 
     public ActionHandler getHandler(){
         return handler;
     }
 
+    public JTable getInvoiceHeaderTable() {
+        return invoiceHeaderTable;
+    }
+
+    public void setInvoiceHeaderTable(JTable invoiceHeaderTable) {
+        this.invoiceHeaderTable = invoiceHeaderTable;
+    }
+
+    public JTable getInvoiceLinesTable() {
+        return invoiceLinesTable;
+    }
+
+    public void setInvoiceLinesTable(JTable invoiceLinesTable) {
+        this.invoiceLinesTable = invoiceLinesTable;
+    }
+
+    public invoicesTableData getInvoicesTableData() {
+        return invoicesTableData;
+    }
+
+    public void setInvoicesTableData(invoicesTableData invoicesTableData) {
+        this.invoicesTableData = invoicesTableData;
+    }
+
+    public ArrayList<InvoiceHeader> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(ArrayList<InvoiceHeader> headers) {
+        this.headers = headers;
+    }
+    public JLabel getCustomerLabelC() {
+        return customerLabelC;
+    }
+
+    public JLabel getInvoiceDateLabelC() {
+        return invoiceDateLabelC;
+    }
+
+    public JLabel getInvoiceNumLabelC() {
+        return invoiceNumLabelC;
+    }
+
+    public JLabel getInvoiceTotalLabelC() {
+        return invoiceTotalLabelC;
+    }
+
+    public int getNextInvoiceNum(){
+        return headers.size()+1;
+    }
 }
