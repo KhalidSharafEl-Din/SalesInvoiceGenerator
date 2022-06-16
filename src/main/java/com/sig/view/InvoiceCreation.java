@@ -22,7 +22,6 @@ public class InvoiceCreation extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        invoiceNumberLabel = new javax.swing.JLabel();
         customerNameLabel = new javax.swing.JLabel();
         CreationDateLabel = new javax.swing.JLabel();
         dialogBoxTitleLabel = new javax.swing.JLabel();
@@ -32,15 +31,12 @@ public class InvoiceCreation extends javax.swing.JDialog {
         cancelInvoiceCreationButton = new javax.swing.JButton();
         cancelInvoiceCreationButton.addActionListener(this.parent.getHandler());
         cancelInvoiceCreationButton.setActionCommand("cancelInvoiceCreationButton");
-        invoiceNumTextField = new javax.swing.JTextField();
         customerNameTextField = new javax.swing.JTextField();
         creationDateTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Create New Invoice");
         setResizable(false);
-
-        invoiceNumberLabel.setText("Invoice Number");
 
         customerNameLabel.setText("Customer Name");
 
@@ -85,11 +81,9 @@ public class InvoiceCreation extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(CreationDateLabel)
-                            .addComponent(customerNameLabel)
-                            .addComponent(invoiceNumberLabel))
+                            .addComponent(customerNameLabel))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(invoiceNumTextField)
                             .addComponent(customerNameTextField)
                             .addComponent(creationDateTextField))
                         .addContainerGap())
@@ -112,11 +106,7 @@ public class InvoiceCreation extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(dialogBoxTitleLabel)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(invoiceNumberLabel)
-                    .addComponent(invoiceNumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customerNameLabel)
                     .addComponent(customerNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -189,15 +179,10 @@ public class InvoiceCreation extends javax.swing.JDialog {
     private javax.swing.JLabel CreationDateLabel;
     private javax.swing.JButton cancelInvoiceCreationButton;
     private javax.swing.JButton confirmInvoiceCreationButton;
-
-
-
     private javax.swing.JTextField creationDateTextField;
     private javax.swing.JLabel customerNameLabel;
     private javax.swing.JTextField customerNameTextField;
     private javax.swing.JLabel dialogBoxTitleLabel;
-    private javax.swing.JTextField invoiceNumTextField;
-    private javax.swing.JLabel invoiceNumberLabel;
     // End of variables declaration//GEN-END:variables
 
     public JTextField getCreationDateTextField() {
@@ -208,7 +193,4 @@ public class InvoiceCreation extends javax.swing.JDialog {
         return customerNameTextField;
     }
 
-    public JTextField getInvoiceNumTextField() {
-        return invoiceNumTextField;
-    }
 }

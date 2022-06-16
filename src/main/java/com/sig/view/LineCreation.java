@@ -1,6 +1,7 @@
 package com.sig.view;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public class LineCreation extends javax.swing.JDialog {
 
@@ -26,6 +27,7 @@ public class LineCreation extends javax.swing.JDialog {
         confirmLineCreationButton = new javax.swing.JButton();
         confirmLineCreationButton.addActionListener(this.parent.getHandler());
         confirmLineCreationButton.setActionCommand("confirmLineCreationButton");
+        confirmLineCreationButton.setMnemonic(KeyEvent.VK_ENTER);
         cancelLineCreationButton = new javax.swing.JButton();
         cancelLineCreationButton.addActionListener(this.parent.getHandler());
         cancelLineCreationButton.setActionCommand("cancelLineCreationButton");

@@ -191,6 +191,7 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
         String customer = invoiceCreation.getCustomerNameTextField().getText();
         // If the user didn't enter a date, Use current date.
         if(date.isBlank()){date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));}
+        if(customer.isBlank()){customer = "Unknown Customer";}
         // Get the index of this entry
         int num = frame.getNextInvoiceNum();
         // Create a new invoiceHeader with the given information and add it to the Model
