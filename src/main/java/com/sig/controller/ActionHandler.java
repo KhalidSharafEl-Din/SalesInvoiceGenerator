@@ -8,6 +8,7 @@ import com.sig.view.SalesInvoiceGeneratorJFrame;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class ActionHandler implements ActionListener, ListSelectionListener {
@@ -90,29 +92,32 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
             frame.getCustomerLabelC().setText(header.getCustomerName());
             frame.getInvoiceTotalLabelC().setText("" + header.getInvoiceTotal());
             // Updating the tables
-            frame.getInvoiceLinesTable().setModel(new linesTableData(header.getInvoiceLines()));
+            frame.getInvoiceLinesTable().setModel(new linesTableData(header.getInvoiceLines())); setTablePrefSize();
             frame.getLinesTableData().fireTableDataChanged();
-
-            frame.getInvoiceLinesTable().getColumnModel().getColumn(0).setPreferredWidth(26);
-            frame.getInvoiceLinesTable().getColumnModel().getColumn(1).setPreferredWidth(225);
-            frame.getInvoiceLinesTable().getColumnModel().getColumn(2).setPreferredWidth(120);
-            frame.getInvoiceLinesTable().getColumnModel().getColumn(3).setPreferredWidth(75);
-            frame.getInvoiceLinesTable().getColumnModel().getColumn(4).setPreferredWidth(75);
         }
     }
     private void saveFile() {
         FileOperations fileIO = new FileOperations();
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text or CSV files only", "txt", "text","csv");
+        fileChooser.setFileFilter(filter);
+        fileChooser.addChoosableFileFilter(filter);
         Path headerPath=null;
         Path linesPath=null;
         // Get the file paths that we want to write to
-        if(fileChooser.showOpenDialog(frame)==JFileChooser.APPROVE_OPTION){
+        if(fileChooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
             File headerFile = fileChooser.getSelectedFile();
             headerPath = Paths.get(headerFile.getAbsolutePath());
+            if(!headerPath.endsWith(".csv")){
+                headerPath = Path.of(headerPath + ".csv");
+            }
         }
-        if(fileChooser.showOpenDialog(frame)==JFileChooser.APPROVE_OPTION){
+        if(fileChooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
             File linesFile = fileChooser.getSelectedFile();
             linesPath = Paths.get(linesFile.getAbsolutePath());
+            if(!linesPath.endsWith(".csv")){
+                linesPath = Path.of(linesPath + ".csv");
+            }
         }
         // Getting the data from the frame object and passing along with the file passed to the file writer [CSV]
         fileIO.writeFile(frame.getHeaders(), headerPath, linesPath);
@@ -121,6 +126,9 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
     private void LoadFile() {
         FileOperations fileIO = new FileOperations();
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text or CSV files only", "txt", "text","csv");
+        fileChooser.setFileFilter(filter);
+        fileChooser.addChoosableFileFilter(filter);
         Path headerPath=null;
         Path linesPath=null;
         // Get the path for the invoices header and lines files
@@ -133,7 +141,9 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
             linesPath = Paths.get(linesFile.getAbsolutePath());
         }
         // use the fileIO to parse the data and return an array list containing the data
-        ArrayList<InvoiceHeader> headers = fileIO.readFile(headerPath, linesPath);
+        ArrayList<InvoiceHeader> headers = null;
+        try{headers = fileIO.readFile(headerPath, linesPath);}
+        catch (Exception e){JOptionPane.showMessageDialog(null, "Please select the proper files to load, these file are the wrong file format or corrupt files.", "Error", JOptionPane.ERROR_MESSAGE);return;}
         System.out.println(headers);
         // Update the table on the screen
         frame.setHeaders(headers);
@@ -141,10 +151,7 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
         frame.setInvoicesTableData(invoicesTableData);
         frame.getInvoicesTableData().fireTableDataChanged();
         frame.getInvoiceHeaderTable().setModel(invoicesTableData);
-        frame.getInvoiceHeaderTable().getColumnModel().getColumn(0).setPreferredWidth(26);
-        frame.getInvoiceHeaderTable().getColumnModel().getColumn(1).setPreferredWidth(120);
-        frame.getInvoiceHeaderTable().getColumnModel().getColumn(2).setPreferredWidth(225);
-        frame.getInvoiceHeaderTable().getColumnModel().getColumn(3).setPreferredWidth(75);
+        setTablePrefSize();
     }
     private void createNewInvoice() {
         // Creating a new dialog box and setting it visible
@@ -154,27 +161,41 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
     private void deleteInvoice() {
         // Get the Invoice Selected
         int selectedIndex = frame.getInvoiceHeaderTable().getSelectedRow();
+        if(selectedIndex < 0){JOptionPane.showMessageDialog(null, "Please Select an Invoice From the Invoices Table To Delete", "Error", JOptionPane.ERROR_MESSAGE);return;}
         // Remove it from the ArrayList
         frame.getHeaders().remove(selectedIndex);
         // Update the invoices numbers to avoid gaps in the table
         for (int i = selectedIndex; i < frame.getHeaders().size(); i++) {
             frame.getHeaders().get(i).setInvoiceNum(i+1);
         }
-        // Update tables
+        // Update Table and GUI
+        clearLabelsContent();
         frame.getInvoicesTableData().fireTableDataChanged();
+        frame.getInvoiceLinesTable().setModel(new linesTableData(new ArrayList<>()));    setTablePrefSize();
+        frame.getLinesTableData().fireTableDataChanged();
+
     }
     private void createNewItem() {
+        if(frame.getInvoiceNumLabelC().getText().isBlank()){JOptionPane.showMessageDialog(null, "Please Select an Invoice From the Invoices Table", "Error", JOptionPane.ERROR_MESSAGE);return;}
         // Creating a new dialog box and setting it visible
         lineCreation = new LineCreation(frame, true);
         lineCreation.setVisible(true);
     }
     private void deleteItem() {
         // Get the Invoice Selected
-        int selectedIndexItem = frame.getInvoiceLinesTable().getSelectedRow();
-        int selectedIndexInvoice = Integer.parseInt(frame.getInvoiceNumLabelC().getText())-1;
+        int selectedIndexItem = -1;
+        int selectedIndexInvoice = -1;
+        try {
+            selectedIndexItem = frame.getInvoiceLinesTable().getSelectedRow();
+            selectedIndexInvoice = Integer.parseInt(frame.getInvoiceNumLabelC().getText())-1;
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Please Select an Item from any invoice to delete.", "Error", JOptionPane.ERROR_MESSAGE);return;
+        }
         // Remove it from the ArrayList
         if(selectedIndexItem >-1 && selectedIndexInvoice >-1){
             frame.getHeaders().get(selectedIndexInvoice).removeInvoiceItem(selectedIndexItem);
+        }else{
+            JOptionPane.showMessageDialog(null, "Please Select an Item from any invoice to delete.", "Error", JOptionPane.ERROR_MESSAGE);return;
         }
         // Update the itemNumbers for the rest of the items
         for (int i = selectedIndexItem; i < frame.getHeaders().get(selectedIndexInvoice).getInvoiceLines().size(); i++) {
@@ -187,7 +208,8 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
     }
     private void confirmInvoiceCreation() {
         // Get the data from the user input (GUI)
-        String date = invoiceCreation.getCreationDateTextField().getText();
+        String date= invoiceCreation.getCreationDateTextField().getText();
+
         String customer = invoiceCreation.getCustomerNameTextField().getText();
         // If the user didn't enter a date, Use current date.
         if(date.isBlank()){date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));}
@@ -195,7 +217,10 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
         // Get the index of this entry
         int num = frame.getNextInvoiceNum();
         // Create a new invoiceHeader with the given information and add it to the Model
-        InvoiceHeader head = new InvoiceHeader(num, customer, date);
+        InvoiceHeader head = null;
+        try{  head = new InvoiceHeader(num, customer, date); }
+        catch (DateTimeParseException e)
+        {JOptionPane.showMessageDialog(null, "Please Enter the date as dd-mm-yyyy or leave it blank to enter today's date.", "Error", JOptionPane.ERROR_MESSAGE);return;}
         frame.getHeaders().add(head);
         // Update the table
         frame.getInvoicesTableData().fireTableDataChanged();
@@ -211,10 +236,18 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
         invoiceCreation = null;
     }
     private void confirmLineCreation() {
-        // Get the data from the user input (GUI)
-        String itemName = lineCreation.getItemNameTextField().getText();
-        double price = Double.parseDouble(lineCreation.getItemPriceTextField().getText());
-        int count = Integer.parseInt(lineCreation.getItemCountTextField().getText());
+        String itemName = null;
+        double price = 0;
+        int count =0;
+        try {
+            // Get the data from the user input (GUI)
+            itemName = lineCreation.getItemNameTextField().getText(); if(itemName.isBlank()) itemName ="Generic Item";
+            price = Double.parseDouble(lineCreation.getItemPriceTextField().getText());
+            count = Integer.parseInt(lineCreation.getItemCountTextField().getText());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Please Enter Valid Data", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         // Get the index of the invoice that contains this item
         int selectedIndex = Integer.parseInt(frame.getInvoiceNumLabelC().getText())-1;
         // Getting the parent invoice
@@ -238,4 +271,23 @@ public class ActionHandler implements ActionListener, ListSelectionListener {
         lineCreation = null;
     }
 
+    private void setTablePrefSize(){
+        frame.getInvoiceHeaderTable().getColumnModel().getColumn(0).setPreferredWidth(26);
+        frame.getInvoiceHeaderTable().getColumnModel().getColumn(1).setPreferredWidth(120);
+        frame.getInvoiceHeaderTable().getColumnModel().getColumn(2).setPreferredWidth(225);
+        frame.getInvoiceHeaderTable().getColumnModel().getColumn(3).setPreferredWidth(75);
+
+        frame.getInvoiceLinesTable().getColumnModel().getColumn(0).setPreferredWidth(26);
+        frame.getInvoiceLinesTable().getColumnModel().getColumn(1).setPreferredWidth(225);
+        frame.getInvoiceLinesTable().getColumnModel().getColumn(2).setPreferredWidth(120);
+        frame.getInvoiceLinesTable().getColumnModel().getColumn(3).setPreferredWidth(75);
+        frame.getInvoiceLinesTable().getColumnModel().getColumn(4).setPreferredWidth(75);
+    }
+
+    private void clearLabelsContent(){
+        frame.getInvoiceNumLabelC().setText("");
+        frame.getInvoiceDateLabelC().setText("");
+        frame.getCustomerLabelC().setText("");
+        frame.getInvoiceTotalLabelC().setText("");
+    }
 }
