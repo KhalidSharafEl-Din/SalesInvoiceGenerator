@@ -17,7 +17,7 @@ public class FileOperations {
             csvReader = new BufferedReader(new FileReader(String.valueOf(headerPath)));
             while ((row = csvReader.readLine()) != null) {
                 String[] data = row.split(",");
-                // do something with the data
+                // Parse the Data and create a new header from it
                 int invoiceNum = Integer.parseInt(data[0]);
                 String invoiceDate = data[1];
                 String customerName = data[2];
@@ -33,7 +33,7 @@ public class FileOperations {
             csvReader = new BufferedReader(new FileReader(String.valueOf(linesPath)));
             while ((row = csvReader.readLine()) != null) {
                 String[] data = row.split(",");
-                // do something with the data
+                // Parse the data and create a new line adding it to the proper invoice
                 int invoiceNum = Integer.parseInt(data[0]);
                 String itemName = data[1];
                 double itemPrice = Double.parseDouble(data[2]);
@@ -46,7 +46,7 @@ public class FileOperations {
             // Close the file
             try {csvReader.close();} catch (IOException e) {e.printStackTrace();}
         }
-
+        // Return the Arraylist of the invoices headers and their lines
         return headers;
     }
 
