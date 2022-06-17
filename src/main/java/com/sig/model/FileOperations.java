@@ -1,20 +1,23 @@
 package com.sig.model;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FileOperations {
-    public ArrayList<InvoiceHeader> readFile(){
+    public ArrayList<InvoiceHeader> readFile(Path headerPath, Path linesPath){
         ArrayList<InvoiceHeader> headers = new ArrayList<>();
         String row;
         BufferedReader csvReader = null;
         // Reading InvoiceHeader.csv
         try{
-            csvReader = new BufferedReader(new FileReader("src/main/java/com/sig/model/InvoiceHeader.csv"));
+            csvReader = new BufferedReader(new FileReader(String.valueOf(headerPath)));
             while ((row = csvReader.readLine()) != null) {
                 String[] data = row.split(",");
-                // do something with the data
+                // Parse the Data and create a new header from it
                 int invoiceNum = Integer.parseInt(data[0]);
                 String invoiceDate = data[1];
                 String customerName = data[2];
@@ -27,10 +30,10 @@ public class FileOperations {
         }
         // Reading InvoiceLine.csv
         try{
-            csvReader = new BufferedReader(new FileReader("src/main/java/com/sig/model/InvoiceLine.csv"));
+            csvReader = new BufferedReader(new FileReader(String.valueOf(linesPath)));
             while ((row = csvReader.readLine()) != null) {
                 String[] data = row.split(",");
-                // do something with the data
+                // Parse the data and create a new line adding it to the proper invoice
                 int invoiceNum = Integer.parseInt(data[0]);
                 String itemName = data[1];
                 double itemPrice = Double.parseDouble(data[2]);
@@ -43,19 +46,19 @@ public class FileOperations {
             // Close the file
             try {csvReader.close();} catch (IOException e) {e.printStackTrace();}
         }
-
+        // Return the Arraylist of the invoices headers and their lines
         return headers;
     }
 
-    public void writeFile(ArrayList<InvoiceHeader> invoiceHeader){
+    public void writeFile(ArrayList<InvoiceHeader> invoiceHeader, Path headerPath, Path linesPath){
         try {
-            FileWriter csvWriter = new FileWriter("src/main/java/com/sig/model/outputTest.csv");
+            FileWriter csvWriter = new FileWriter(String.valueOf(headerPath));
             for(InvoiceHeader header : invoiceHeader){
                 csvWriter.append(header.toCSV());
             }
             csvWriter.close();
 
-            csvWriter = new FileWriter("src/main/java/com/sig/model/outputTest2.csv");
+            csvWriter = new FileWriter(String.valueOf(linesPath));
             for(InvoiceHeader header : invoiceHeader){
                for(InvoiceLine line : header.getInvoiceLines()){
                    csvWriter.append(line.toCSV());
@@ -66,17 +69,4 @@ public class FileOperations {
         } catch (IOException e) {e.printStackTrace();}
     }
 
-    public static void main(String[] args) {
-        FileOperations fileIO = new FileOperations();
-        //fileIO.writeFile(fileIO.readFile());
-
-        for(InvoiceHeader header : fileIO.readFile()) {
-            System.out.print("invoice" + header.getInvoiceNum() + "Num\n{\n");
-            System.out.print("Invoice" + header.getInvoiceNum() + "Date(" + header.getInvoiceDate() + "), " + header.getCustomerName() + "\n");
-            for (InvoiceLine line : header.getInvoiceLines()) {
-                System.out.print(line.toCSV());
-            }
-            System.out.println("}\n\n");
-        }
-    }
 }

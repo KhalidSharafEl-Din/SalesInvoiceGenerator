@@ -1,15 +1,19 @@
 package com.sig.view;
 
 import com.sig.controller.ActionHandler;
+import com.sig.model.*;
 
 import javax.swing.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
-public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
+public class SalesInvoiceGeneratorJFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form SalesInvoiceGenratorJFrame
      */
-    public SalesInvoiceGenratorJFrame() {
+    public SalesInvoiceGeneratorJFrame() {
         initComponents();
     }
 
@@ -24,6 +28,7 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
 
         invoiceHeaderScrollPane = new javax.swing.JScrollPane();
         invoiceHeaderTable = new javax.swing.JTable();
+        invoiceHeaderTable.getSelectionModel().addListSelectionListener(handler);
         newInvoiceButton = new javax.swing.JButton();
         newInvoiceButton.addActionListener(handler);
         deleteInvoiceButton = new javax.swing.JButton();
@@ -54,6 +59,8 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sales Invoice Generator V1.0");
+        setLocation(new java.awt.Point(0, 0));
 
         invoiceHeaderTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -63,10 +70,11 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "No", "Date", "Customer", "Total"
             }
         ));
         invoiceHeaderScrollPane.setViewportView(invoiceHeaderTable);
+        invoiceHeaderScrollPane.setBorder(BorderFactory.createTitledBorder("Invoices"));
 
         newInvoiceButton.setText("New Invoice");
         newInvoiceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -85,13 +93,13 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
 
         invoiceTotalLabelH.setText("Total");
 
-        invoiceNumLabelC.setText("jLabel5");
+        invoiceNumLabelC.setText("");
 
-        customerLabelC.setText("jLabel6");
+        customerLabelC.setText("");
 
-        invoiceDateLabelC.setText("jLabel7");
+        invoiceDateLabelC.setText("");
 
-        invoiceTotalLabelC.setText("jLabel8");
+        invoiceTotalLabelC.setText("");
 
         invoiceLinesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,10 +109,13 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "No", "Item Name ", "Item Price", "Item Count", "Item Total"
             }
         ));
         inoviceLinesScrollPane.setViewportView(invoiceLinesTable);
+        inoviceLinesScrollPane.setBorder(BorderFactory.createTitledBorder("Items"));
+
+
 
         deleteItemButton.setText("Delete Item");
         deleteItemButton.addActionListener(new java.awt.event.ActionListener() {
@@ -189,6 +200,9 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {deleteInvoiceButton, deleteItemButton, newInvoiceButton, newItemButton});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -221,9 +235,15 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
                     .addComponent(newItemButton)
                     .addComponent(deleteItemButton))
                 .addContainerGap())
+
         );
 
-        pack();
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {deleteInvoiceButton, deleteItemButton, newInvoiceButton, newItemButton});
+
+        setSize(new java.awt.Dimension(938, 634));
+        setLocationRelativeTo(null);
+
+        loadInitData();
     }// </editor-fold>//GEN-END:initComponents
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
@@ -255,28 +275,24 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+        try {       
+                    javax.swing.UIManager.setLookAndFeel("com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightContrastIJTheme");
+
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceGenratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SalesInvoiceGeneratorJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+       
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SalesInvoiceGenratorJFrame().setVisible(true);
+                new SalesInvoiceGeneratorJFrame().setVisible(true);
             }
 
         });
@@ -307,7 +323,92 @@ public class SalesInvoiceGenratorJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
+    private ActionHandler handler = new ActionHandler(this);
+    private ArrayList<InvoiceHeader> headers;
+    private invoicesTableData invoicesTableData;
 
-    private ActionHandler handler = new ActionHandler();
+    public linesTableData getLinesTableData() {
+        return linesTableData;
+    }
 
+    private linesTableData linesTableData;
+
+    public ActionHandler getHandler(){
+        return handler;
+    }
+
+    public JTable getInvoiceHeaderTable() {
+        return invoiceHeaderTable;
+    }
+
+    public void setInvoiceHeaderTable(JTable invoiceHeaderTable) {
+        this.invoiceHeaderTable = invoiceHeaderTable;
+    }
+
+    public JTable getInvoiceLinesTable() {
+        return invoiceLinesTable;
+    }
+
+    public void setInvoiceLinesTable(JTable invoiceLinesTable) {
+        this.invoiceLinesTable = invoiceLinesTable;
+    }
+
+    public invoicesTableData getInvoicesTableData() {
+        return invoicesTableData;
+    }
+
+    public void setInvoicesTableData(invoicesTableData invoicesTableData) {
+        this.invoicesTableData = invoicesTableData;
+    }
+
+    public ArrayList<InvoiceHeader> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(ArrayList<InvoiceHeader> headers) {
+        this.headers = headers;
+    }
+    public JLabel getCustomerLabelC() {
+        return customerLabelC;
+    }
+
+    public JLabel getInvoiceDateLabelC() {
+        return invoiceDateLabelC;
+    }
+
+    public JLabel getInvoiceNumLabelC() {
+        return invoiceNumLabelC;
+    }
+
+    public JLabel getInvoiceTotalLabelC() {
+        return invoiceTotalLabelC;
+    }
+
+    public int getNextInvoiceNum(){
+        return headers.size()+1;
+    }
+
+    private void loadInitData(){
+        FileOperations fileIO = new FileOperations();
+        Path headerPath = Paths.get("src/main/java/com/sig/model/InvoiceHeader.csv");
+        Path linePath = Paths.get("src/main/java/com/sig/model/InvoiceLine.csv");
+        headers = fileIO.readFile(headerPath,linePath);
+        invoicesTableData = new invoicesTableData(headers);
+        linesTableData = new linesTableData(headers.get(0).getInvoiceLines());
+        invoiceHeaderTable.setModel(invoicesTableData);
+        invoiceLinesTable.setModel(linesTableData);
+        invoicesTableData.fireTableDataChanged();
+        linesTableData.fireTableDataChanged();
+
+        invoiceHeaderTable.getColumnModel().getColumn(0).setPreferredWidth(26);
+        invoiceHeaderTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+        invoiceHeaderTable.getColumnModel().getColumn(2).setPreferredWidth(225);
+        invoiceHeaderTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+
+        invoiceLinesTable.getColumnModel().getColumn(0).setPreferredWidth(26);
+        invoiceLinesTable.getColumnModel().getColumn(1).setPreferredWidth(225);
+        invoiceLinesTable.getColumnModel().getColumn(2).setPreferredWidth(120);
+        invoiceLinesTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+        invoiceLinesTable.getColumnModel().getColumn(4).setPreferredWidth(75);
+    }
 }
